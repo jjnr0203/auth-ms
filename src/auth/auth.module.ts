@@ -1,5 +1,4 @@
 import { Global, Module } from '@nestjs/common';
-import { DatabaseModule } from 'src/database/database.module';
 import { authProviders } from './providers';
 import { GoogleStrategy } from './strategies';
 import {
@@ -16,13 +15,15 @@ import {
 } from './controllers';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
+import { envs } from 'src/config';
+import { DatabaseModule } from 'src/database/database.module';
 
 @Global()
 @Module({
   imports: [
     DatabaseModule,
     JwtModule.register({
-      secret:envs.jwtSecret,
+      secret:envs.JWT_SECRET,
       signOptions:{
         expiresIn: '15m'
       }

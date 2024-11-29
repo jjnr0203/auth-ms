@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../services';
-import { envs } from 'src/config/envs';
+import { envs } from 'src/config';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(token, { secret: envs.jwtSecret });
+      const payload = await this.jwtService.verifyAsync(token, { secret: envs.JWT_SECRET });
       
       const user = await this.usersService.findOne(payload.id);
       if (!user) throw new UnauthorizedException('User does not exists');

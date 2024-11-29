@@ -1,4 +1,3 @@
-import { UserEntity } from 'src/modules/auth/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -7,6 +6,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { UserEntity } from './user.entity';
 
 @Entity('information_users', { schema: 'auth' })
 export class InformationUserEntity {

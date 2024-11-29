@@ -1,6 +1,5 @@
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
-import { UserEntity } from '../../entities/user.entity';
-import { CreateUserDto } from '../user/create-user.dto';
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+
 
 export class CreateInformationUserDto {
   @IsString()
