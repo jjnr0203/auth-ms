@@ -7,7 +7,7 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 
-@Entity('roles', { schema: 'auth' })
+@Entity('roles')
 export class RoleEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

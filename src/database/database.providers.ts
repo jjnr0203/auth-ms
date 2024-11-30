@@ -12,9 +12,9 @@ export const databaseProviders = [
         type: 'postgres',
         host: DB_HOST,
         port: DB_PORT,
-        name: DB_NAME,
         password: DB_PASSWORD,
         username: DB_USER,
+        database: DB_NAME,
         entities: [
             __dirname + '/../**/*.entity{.ts,.js}',
         ],

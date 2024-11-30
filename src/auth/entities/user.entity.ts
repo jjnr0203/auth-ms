@@ -16,7 +16,7 @@ import { RoleEntity } from './role.entity';
 import { InformationUserEntity } from './information_user.entity';
 import * as bcrypt from 'bcrypt'
 
-@Entity('users', { schema: 'auth' })
+@Entity('users')
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
