@@ -13,12 +13,13 @@ import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { CreateUserDto } from '../dto';
 import { AuthGuard } from '../guards/auth.guard';
 import { UserEntity } from '../entities/user.entity';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('login')
+  @MessagePattern('login')
   @UseGuards(LocalAuthGuard)
   async login(@Request() req:Request) {
     const user = req['user']; 
@@ -27,8 +28,8 @@ export class AuthController {
     return { token, user: user };
   }
 
-  @Post('register')
-  async register(@Body() createUserDto: CreateUserDto) {
+  @MessagePattern('register')
+  async register(@Payload() createUserDto: CreateUserDto) {
     const user = await this.authService.registerLocalUser(createUserDto);
     const token = await this.authService.login(user.id);
 

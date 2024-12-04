@@ -1,15 +1,17 @@
 import { Injectable } from "@nestjs/common";
-import { RolesSeeder } from "./roles.seeder";
+import { RolesService } from "src/auth/services";
+import { seedData } from "./data";
 
 
 @Injectable()
 export class DatabaseSeeder{
     constructor(
-        private rolesSeeder: RolesSeeder
+       private readonly rolesService:RolesService
     ){}
 
     async run(){
-        await this.rolesSeeder.run()
+        const roles = await this.rolesService.insertMany(seedData.roles)
+        return roles
     }
 
 }
