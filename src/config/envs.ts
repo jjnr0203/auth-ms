@@ -26,7 +26,7 @@ const envsSchema = joi
     GOOGLE_SECRET: joi.string().required(),
     DB_HOST: joi.string().required(),
     DB_PORT: joi.number().port(),
-    DB_NAME: joi.string().required(),
+    DB_NAME_AUTH: joi.string().required(),
     DB_PASSWORD: joi.string().required(),
     DB_USER: joi.string().required(),
     JWT_SECRET: joi.string().required(),
@@ -50,7 +50,7 @@ export const envs: EnvsSchema = {
   DATABASE: {
     DB_HOST: value.DB_HOST,
     DB_PORT: value.DB_PORT,
-    DB_NAME: value.DB_NAME,
+    DB_NAME: value.DB_NAME_AUTH,
     DB_PASSWORD: value.DB_PASSWORD,
     DB_USER: value.DB_USER,
   },
