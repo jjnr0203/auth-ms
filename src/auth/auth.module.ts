@@ -1,6 +1,5 @@
 import { Global, Module } from '@nestjs/common';
 import { authProviders } from './providers';
-import { GoogleStrategy } from './strategies';
 import {
   AuthService,
   InformationUsersService,
@@ -13,7 +12,6 @@ import {
   RolesController,
   UsersController,
 } from './controllers';
-import { LocalStrategy } from './strategies/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { envs } from 'src/config';
 import { DatabaseModule } from 'src/database/database.module';
@@ -42,8 +40,6 @@ import { DatabaseModule } from 'src/database/database.module';
     RolesService,
     UsersService,
     AuthService,
-    LocalStrategy,
-    GoogleStrategy,
   ],
   exports:[
     UsersService,

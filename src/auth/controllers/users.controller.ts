@@ -12,6 +12,7 @@ import {
 import { CreateUserDto, UpdateUserDto } from '../dto';
 import { UsersService } from '../services/users.service';
 import { AuthGuard } from '../guards/auth.guard';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('users')
 export class UsersController {
@@ -31,10 +32,9 @@ export class UsersController {
     return users;
   }
 
-  @UseGuards(AuthGuard)
-  @Get('profile')
-  async findProfile(@Request() req) { 
-    const user = await this.usersService.findOne(req.user.id);
+  @MessagePattern('userProfile')
+  async findProfile(@Payload() id:string) { 
+    const user = await this.usersService.findOne(id);
     return user;
   }
 

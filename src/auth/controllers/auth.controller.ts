@@ -1,59 +1,41 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Request,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
-import { GoogleAuthGuard } from '../guards/google-auth.guard';
+import { Controller } from '@nestjs/common';
 import { AuthService } from '../services';
-import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { CreateUserDto } from '../dto';
-import { AuthGuard } from '../guards/auth.guard';
-import { UserEntity } from '../entities/user.entity';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { LoginDto } from '../dto/user/login.dto';
+import { CreateUserFromGoogleDto } from '../dto/user/create-google-user.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @MessagePattern('login')
-  @UseGuards(LocalAuthGuard)
-  async login(@Request() req:Request) {
-    const user = req['user']; 
-    
-    const token = await this.authService.login(user.id);
-    return { token, user: user };
+  async login(@Payload() loginDto: LoginDto) {
+    const user = await this.authService.login(loginDto);
+    const token = await this.authService.generateJwt(user.id);
+    return { user, token };
   }
 
   @MessagePattern('register')
   async register(@Payload() createUserDto: CreateUserDto) {
     const user = await this.authService.registerLocalUser(createUserDto);
-    const token = await this.authService.login(user.id);
+    const token = await this.authService.generateJwt(user.id);
 
     return { token, user };
   }
 
-  @UseGuards(AuthGuard)
-  @Get('validate-token')
-  async validateToken(@Request() req:Request) {
-    const user = req['user'];    
-    const token = await this.authService.login(user.id);
-    return { token, user };
+  @MessagePattern('validateToken')
+  async validateToken(@Payload() receivedToken: string) {
+    const user = await this.authService.validateToken(receivedToken);
+    const token = await this.authService.generateJwt(user.id);
+    return {user,token};
   }
 
-  @Get('google/login')
-  @UseGuards(GoogleAuthGuard)
-  handleLogin() {
-    return { msg: 'Google Auth' };
+  @MessagePattern('validateGoogleUser')
+  async validateGoogleUser(@Payload() createGoogleUserDto: CreateUserFromGoogleDto) {
+    const user = await this.authService.validateOAuthUser(createGoogleUserDto)
+    const token = await this.authService.generateJwt(user.id);
+    return {user,token};
   }
 
-  @Get('google/callback')
-  @UseGuards(GoogleAuthGuard)
-  async handleRedirect(@Request() req, @Res() res) {
-    const token = await this.authService.login(req.user.id);
-    return res.redirect('http://localhost:4200/auth/success/' + token);
-  }
 }
