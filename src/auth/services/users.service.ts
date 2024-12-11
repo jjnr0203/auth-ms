@@ -54,7 +54,6 @@ export class UsersService {
         informationUser: true
       },
     });
-    if(!user) throw new NotFoundException('Invalid credentials');
     return user;
   }
 

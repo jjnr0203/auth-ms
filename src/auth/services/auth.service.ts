@@ -1,4 +1,4 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthRepositoryEnum } from 'src/shared/enums/repository.enum';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
@@ -10,6 +10,7 @@ import { CreateUserDto } from '../dto';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { LoginDto } from '../dto/user/login.dto';
 import { envs } from 'src/config';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class AuthService {
@@ -27,13 +28,13 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const user = await this.usersService.findOneByEmail(loginDto.email);
-    if (!user) throw new UnauthorizedException('Invalid credentials');
+    if (!user) throw new RpcException({status: HttpStatus.UNAUTHORIZED, message: 'Invalid credentials'});
     const isPasswordMatch = await compare(loginDto.password, user.password);
     if (!isPasswordMatch)
-      throw new UnauthorizedException('Invalid credentials');
+      throw new RpcException({status: HttpStatus.UNAUTHORIZED, message: 'Invalid credentials'});
     const {password, ...rest} = user
     return rest;
-  }
+  } 
 
   async validateOAuthUser(googleUser: CreateUserFromGoogleDto) {
     const user = await this.repository.findOneBy({ email: googleUser.email });
