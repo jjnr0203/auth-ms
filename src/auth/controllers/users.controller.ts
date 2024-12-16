@@ -37,6 +37,11 @@ export class UsersController {
     const user = await this.usersService.findOne(id);
     return user;
   }
+  @MessagePattern('findUser')
+  async findOne(@Payload() id:string) { 
+    const user = await this.usersService.findOne(id);
+    return user;
+  }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() payload: UpdateUserDto) {
